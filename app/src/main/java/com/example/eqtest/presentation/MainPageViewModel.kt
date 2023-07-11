@@ -12,4 +12,8 @@ class MainPageViewModel(context: Context) : ViewModel() {
 
     fun startMusic() = player.play()
 
+    fun stopMusic() = player.stop()
+
+    fun pauseMusic() = player.pause()
+
 }

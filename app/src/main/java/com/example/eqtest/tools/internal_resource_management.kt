@@ -35,3 +35,7 @@ fun startLoop(inputStreamFromRawFile: InputStream, track: AudioTrack) =
     CoroutineScope(Dispatchers.IO).launch {
         ByteBuffer.bufferLoop(inputStreamFromRawFile, track)
     }
+
+fun stopLoop(){
+
+}
