@@ -41,12 +41,12 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalConte
             .padding(top = 32.dp)
     ) {
         Row {
-            slider()
-            slider()
-            slider()
-            slider()
-            slider()
-            slider()
+            slider { gain: Double -> mainPageViewModel.setGain(gain, 0) }
+            slider { gain: Double -> mainPageViewModel.setGain(gain, 1) }
+            slider { gain: Double -> mainPageViewModel.setGain(gain, 2) }
+            slider { gain: Double -> mainPageViewModel.setGain(gain, 3) }
+            slider { gain: Double -> mainPageViewModel.setGain(gain, 4) }
+            slider { gain: Double -> mainPageViewModel.setGain(gain, 5) }
         }
         Button(onClick = { mainPageViewModel.startMusic() }) {
             Text(text = "Start")
@@ -61,7 +61,7 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalConte
 }
 
 @Composable
-fun slider(): Int {
+fun slider(setGain: (Double) -> Unit) {
     var sliderPosition by remember { mutableStateOf(0f) }
     Slider(
         modifier = Modifier
@@ -85,8 +85,10 @@ fun slider(): Int {
             .width(120.dp)
             .height(50.dp),
         value = sliderPosition,
-        valueRange = 1f..10f,
-        onValueChange = { sliderPosition = it }
+        valueRange = -50f..50f,
+        onValueChange = {
+            sliderPosition = it
+            setGain(sliderPosition.toDouble())
+        }
     )
-    return sliderPosition.roundToInt()
 }

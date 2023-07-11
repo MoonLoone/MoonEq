@@ -13,7 +13,7 @@ class Filter(
             for (j in coefficients.indices) {
                 accumulator = (output[i] * coefficients[j]).toInt()
                 if (gain == 1.0) output[i] += 0.145 * accumulator.toDouble()
-                else output[i + j] += 0.13 * gain * accumulator.toDouble()
+                else output[i] += 0.13 * gain * accumulator.toDouble()
             }
         }
         return output

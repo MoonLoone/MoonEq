@@ -35,4 +35,8 @@ object Equalizer {
         }
     }
 
+    fun setFilterGain(gain: Double, index: Int){
+        filters[index].gain = gain
+    }
+
 }
