@@ -3,6 +3,7 @@ package com.example.eqtest.tools
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
+import android.util.Log
 import com.example.eqtest.domain.ByteBuffer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,10 +11,6 @@ import kotlinx.coroutines.launch
 import java.io.InputStream
 
 fun createAudioTrack(): AudioTrack {
-    val minBufferSize = AudioTrack.getMinBufferSize(
-        44100,
-        AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT
-    )
     return AudioTrack.Builder()
         .setAudioFormat(
             AudioFormat.Builder().setEncoding(AudioFormat.ENCODING_PCM_16BIT)
@@ -21,13 +18,14 @@ fun createAudioTrack(): AudioTrack {
                 .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
                 .build()
         )
-        .setBufferSizeInBytes(minBufferSize)
+        .setBufferSizeInBytes(EqConstants.BUFFER_SIZE)
         .setAudioAttributes(
             AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build()
         )
+        .setTransferMode(AudioTrack.MODE_STREAM)
         .build()
 }
 

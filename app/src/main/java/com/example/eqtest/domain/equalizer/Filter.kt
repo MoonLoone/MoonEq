@@ -11,15 +11,16 @@ class Filter(
 
     var gain: Double = 1.0
 
-    fun convolutionAsync(input: Array<Double>): Deferred<Array<Double>> =
+    fun convolutionAsync(input: ShortArray): Deferred<ShortArray> =
         CoroutineScope(Dispatchers.IO).async {
             var accumulator: Int
             val output = input.clone()
-            for (i in output.indices) {
+            for (i in input.indices) {
+                accumulator = 0
                 for (j in coefficients.indices) {
-                    accumulator = (output[i] * coefficients[j]).toInt()
-                    if (gain == 1.0) output[i] += 0.145 * accumulator.toDouble()
-                    else output[i] += 0.13 * gain * accumulator.toDouble()
+                    if (i-j >= 0) accumulator += input[i-j] * coefficients[j]
+                    if (gain == 1.0) output[i] = (output[i] + (0.145 * accumulator.toShort()).toInt()).toShort()
+                    else output[i] = (output[i] + (0.13 * gain * accumulator).toInt()).toShort()
                 }
             }
             return@async output

@@ -2,7 +2,7 @@ package com.example.eqtest.domain.equalizer.coefs
 
 object FirstFir {
 
-    val firstFIR = arrayOf<Double>(
+    val firstFIR = arrayOf<Short>(
         3.64258863103e-07, 6.942549768111e-07, 9.896031451908e-07, 1.249927404136e-06,
         1.474861163047e-06, 1.664047345039e-06, 1.817138525642e-06, 1.933797069955e-06,
         2.013695268244e-06, 2.056515469926e-06, 2.061950215924e-06, 2.029702369363e-06,

@@ -1,5 +1,6 @@
 package com.example.eqtest.domain.equalizer
 
+import android.util.Log
 import com.example.listenmymusic.structure_elements.equalizer.coefs.FifthFir
 import com.example.eqtest.domain.equalizer.coefs.FirstFir
 import com.example.listenmymusic.structure_elements.equalizer.coefs.FourthFir
@@ -30,13 +31,13 @@ object Equalizer {
         ),
     )
 
-    suspend fun equalization(input: Array<Double>) {
+    suspend fun equalization(input: ShortArray) {
         val filterConvolution = Array(filters.size) {
             filters[it].convolutionAsync(input)
         }
         for (i in input.indices) {
             input[i] =
-                input[i] + filterConvolution[0].await()[i] + filterConvolution[1].await()[i] + filterConvolution[2].await()[i] + +filterConvolution[3].await()[i] + filterConvolution[4].await()[i] + filterConvolution[5].await()[i]
+                (input[i] + filterConvolution[0].await()[i] + filterConvolution[1].await()[i] + filterConvolution[2].await()[i] + +filterConvolution[3].await()[i] + filterConvolution[4].await()[i] + filterConvolution[5].await()[i]).toShort()
         }
     }
 
