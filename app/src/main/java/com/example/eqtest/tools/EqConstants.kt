@@ -2,6 +2,6 @@ package com.example.eqtest.tools
 
 object EqConstants {
 
-    const val BUFFER_SIZE = 4096
+    const val BUFFER_SIZE = 256
 
 }

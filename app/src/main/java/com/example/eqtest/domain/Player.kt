@@ -12,11 +12,10 @@ class Player(context: Context) {
 
     private val track: AudioTrack = createAudioTrack()
     private val inputStreamFromRawFile = context.resources.openRawResource(R.raw.sound)
-    private var loopJob: Job? = null
 
     fun play() {
         track.play()
-        loopJob = startLoop(inputStreamFromRawFile, track)
+        startLoop(inputStreamFromRawFile, track)
     }
 
     fun stop(){

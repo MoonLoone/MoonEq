@@ -85,7 +85,7 @@ fun slider(setGain: (Double) -> Unit) {
             .width(120.dp)
             .height(50.dp),
         value = sliderPosition,
-        valueRange = -50f..50f,
+        valueRange = 0f..1f,
         onValueChange = {
             sliderPosition = it
             setGain(sliderPosition.toDouble())
