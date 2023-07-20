@@ -3,12 +3,10 @@ package com.example.eqtest.domain
 import android.media.AudioTrack
 import android.util.Log
 import com.example.eqtest.domain.equalizer.Equalizer
+import com.example.eqtest.tools.ByteArrayToShortArray
 import com.example.eqtest.tools.EqConstants
-import com.example.eqtest.tools.shortArrayToByteArray
-import com.example.eqtest.tools.toShortArray
-import kotlinx.coroutines.CoroutineScope
+import com.example.eqtest.tools.ShortArrayToByteArray
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.InputStream
 
@@ -20,16 +18,14 @@ object ByteBuffer {
         while (withContext(Dispatchers.IO) {
                 inputStream.read(music)
             } != -1) {
-            Log.d("!!!", "Before "+music.toList().toString())
-            val musicInShort = toShortArray(music)
-                Equalizer.equalization(musicInShort)
-                Log.d("!!!", "After "+musicInShort.toList().toString())
-                track.write(
-                    shortArrayToByteArray(musicInShort),
-                    0,
-                    music.size
-                )
-            }
+            val msS = ByteArrayToShortArray(music)
+            val equalizedMusic = Equalizer.equalization(msS)
+            track.write(
+                ShortArrayToByteArray(equalizedMusic),
+                0,
+                music.size
+            )
+        }
     }
 
 }

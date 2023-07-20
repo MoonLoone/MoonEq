@@ -54,33 +54,36 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalConte
 
 @Composable
 fun CustomSlider(setGain: (Double) -> Unit) {
-    var sliderPosition by remember { mutableStateOf(0f) }
-    Slider(
-        modifier = Modifier
-            .graphicsLayer {
-                rotationZ = 270f
-                transformOrigin = TransformOrigin(0f, 0f)
-            }
-            .layout { measurable, constraints ->
-                val placeable = measurable.measure(
-                    Constraints(
-                        minWidth = constraints.minHeight,
-                        maxWidth = constraints.maxHeight,
-                        minHeight = constraints.minWidth,
-                        maxHeight = constraints.maxHeight,
-                    )
-                )
-                layout(placeable.height, placeable.width) {
-                    placeable.place(-placeable.width, 0)
+    var sliderPosition by remember { mutableStateOf(1f) }
+    Column() {
+        Slider(
+            modifier = Modifier
+                .graphicsLayer {
+                    rotationZ = 270f
+                    transformOrigin = TransformOrigin(0f, 0f)
                 }
+                .layout { measurable, constraints ->
+                    val placeable = measurable.measure(
+                        Constraints(
+                            minWidth = constraints.minHeight,
+                            maxWidth = constraints.maxHeight,
+                            minHeight = constraints.minWidth,
+                            maxHeight = constraints.maxHeight,
+                        )
+                    )
+                    layout(placeable.height, placeable.width) {
+                        placeable.place(-placeable.width, 0)
+                    }
+                }
+                .width(120.dp)
+                .height(50.dp),
+            value = sliderPosition,
+            valueRange = 0f..5f,
+            onValueChange = {
+                sliderPosition = it
+                setGain(sliderPosition.toDouble())
             }
-            .width(120.dp)
-            .height(50.dp),
-        value = sliderPosition,
-        valueRange = 0f..1f,
-        onValueChange = {
-            sliderPosition = it
-            setGain(sliderPosition.toDouble())
-        }
-    )
+        )
+        Text(text = sliderPosition.toString())
+    }
 }
