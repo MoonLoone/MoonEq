@@ -1,35 +1,15 @@
 package com.example.eqtest.domain.equalizer
 
-import android.util.Log
-import com.example.listenmymusic.structure_elements.equalizer.coefs.FifthFir
-import com.example.eqtest.domain.equalizer.coefs.FirstFir
-import com.example.listenmymusic.structure_elements.equalizer.coefs.FourthFir
-import com.example.eqtest.domain.equalizer.coefs.SecondFir
-import com.example.eqtest.domain.equalizer.coefs.SixthFir
-import com.example.eqtest.domain.equalizer.coefs.ThirdFir
+import com.example.eqtest.domain.equalizer.coefs.FirCoefficients
+import com.example.eqtest.tools.EqConstants
 
 object Equalizer {
 
-    private val filters = listOf(
+    private val filters = List(EqConstants.FILTERS_COUNT){
         Filter(
-            FirstFir.firstFIR
-        ),
-        Filter(
-            SecondFir.secondFIR
-        ),
-        Filter(
-            ThirdFir.thirdFIR
-        ),
-        Filter(
-            FourthFir.fourthFIR
-        ),
-        Filter(
-            FifthFir.fifthFIR
-        ),
-        Filter(
-            SixthFir.sixFIR
-        ),
-    )
+            FirCoefficients.FIR[it]
+        )
+    }
 
     suspend fun equalization(input: ShortArray) {
         val filterConvolution = Array(filters.size) {
