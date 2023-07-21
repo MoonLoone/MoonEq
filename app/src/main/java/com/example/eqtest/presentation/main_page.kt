@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
@@ -29,23 +28,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import co.yml.charts.ui.linechart.LineChart
-import co.yml.charts.ui.linechart.model.GridLines
-import co.yml.charts.ui.linechart.model.IntersectionPoint
-import co.yml.charts.ui.linechart.model.Line
-import co.yml.charts.ui.linechart.model.LineChartData
-import co.yml.charts.ui.linechart.model.LinePlotData
-import co.yml.charts.ui.linechart.model.LineStyle
-import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
-import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
-import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.example.eqtest.tools.EqConstants
+import com.himanshoe.charty.line.LineChart
 
 @Preview
 @Composable
 fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalContext.current.applicationContext)) {
-    val points = mainPageViewModel.pointsStateData.collectAsState()
-    Log.d("!!!", points.toString())
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -59,31 +47,10 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalConte
                 .height(300.dp)
                 .fillMaxWidth()
         ) {
-
-
-            val lineChartData = LineChartData(
-                linePlotData = LinePlotData(
-                    lines = listOf(
-                        Line(
-                            dataPoints = points.value,
-                            LineStyle(),
-                            IntersectionPoint(),
-                            SelectionHighlightPoint(),
-                            ShadowUnderLine(),
-                            SelectionHighlightPopUp()
-                        )
-                    ),
-                ),
-                xAxisData = mainPageViewModel.xAxisData,
-                yAxisData = mainPageViewModel.yAxisData,
-                gridLines = GridLines(),
-                backgroundColor = Color.White
-            )
-            LineChart(
-                modifier = Modifier
-                    .fillMaxSize(),
-                lineChartData = lineChartData
-            )
+            val points by remember {
+                mainPageViewModel.chartDataCollection
+            }
+            LineChart(dataCollection = points)
         }
         Row {
             for (i in 0 until EqConstants.FILTERS_COUNT)
