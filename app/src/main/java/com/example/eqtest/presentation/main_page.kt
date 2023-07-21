@@ -1,9 +1,12 @@
 package com.example.eqtest.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -11,12 +14,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
@@ -24,11 +29,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import co.yml.charts.ui.linechart.LineChart
+import co.yml.charts.ui.linechart.model.GridLines
+import co.yml.charts.ui.linechart.model.IntersectionPoint
+import co.yml.charts.ui.linechart.model.Line
+import co.yml.charts.ui.linechart.model.LineChartData
+import co.yml.charts.ui.linechart.model.LinePlotData
+import co.yml.charts.ui.linechart.model.LineStyle
+import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
+import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
+import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.example.eqtest.tools.EqConstants
 
 @Preview
 @Composable
 fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalContext.current.applicationContext)) {
+    val points = mainPageViewModel.pointsStateData.collectAsState()
+    Log.d("!!!", points.toString())
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -36,6 +53,38 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalConte
             .fillMaxSize()
             .padding(top = 32.dp)
     ) {
+        Box(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp)
+                .height(300.dp)
+                .fillMaxWidth()
+        ) {
+
+
+            val lineChartData = LineChartData(
+                linePlotData = LinePlotData(
+                    lines = listOf(
+                        Line(
+                            dataPoints = points.value,
+                            LineStyle(),
+                            IntersectionPoint(),
+                            SelectionHighlightPoint(),
+                            ShadowUnderLine(),
+                            SelectionHighlightPopUp()
+                        )
+                    ),
+                ),
+                xAxisData = mainPageViewModel.xAxisData,
+                yAxisData = mainPageViewModel.yAxisData,
+                gridLines = GridLines(),
+                backgroundColor = Color.White
+            )
+            LineChart(
+                modifier = Modifier
+                    .fillMaxSize(),
+                lineChartData = lineChartData
+            )
+        }
         Row {
             for (i in 0 until EqConstants.FILTERS_COUNT)
                 CustomSlider { gain: Double -> mainPageViewModel.setGain(gain, i) }
@@ -55,7 +104,7 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalConte
 @Composable
 fun CustomSlider(setGain: (Double) -> Unit) {
     var sliderPosition by remember { mutableStateOf(1f) }
-    Column() {
+    Column {
         Slider(
             modifier = Modifier
                 .graphicsLayer {
