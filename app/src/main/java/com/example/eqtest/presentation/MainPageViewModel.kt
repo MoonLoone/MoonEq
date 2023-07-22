@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.eqtest.domain.ByteBuffer
 import com.example.eqtest.domain.Player
 import com.example.eqtest.domain.equalizer.Equalizer
+import com.example.eqtest.tools.EqConstants
 import com.himanshoe.charty.common.ChartDataCollection
 import com.himanshoe.charty.line.model.LineData
 import kotlinx.coroutines.CoroutineScope
@@ -40,12 +41,12 @@ class MainPageViewModel(context: Context) : ViewModel() {
         Timer(true).schedule(timerTask {
             CoroutineScope(viewModelScope.coroutineContext).launch {
                 _chartDataCollection.value = ChartDataCollection(
-                    ByteBuffer.equalizedMusic.slice(IntRange(0, 100)).toList()
+                    ByteBuffer.equalizedMusic.slice(IntRange(50, EqConstants.BUFFER_SIZE/4)).toList()
                         .mapIndexed { index, item ->
                             LineData(xValue = index, yValue = item.toFloat())
                         })
             }
-        }, 0, 50)
+        }, 0, 100)
     }
 
     fun stopMusic() = player.stop()

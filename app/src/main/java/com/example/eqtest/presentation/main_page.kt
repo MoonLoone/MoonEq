@@ -1,6 +1,5 @@
 package com.example.eqtest.presentation
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,13 +13,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
@@ -29,7 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.example.eqtest.tools.EqConstants
+import com.himanshoe.charty.common.config.AxisConfig
 import com.himanshoe.charty.line.LineChart
+import com.himanshoe.charty.line.config.LineConfig
 
 @Preview
 @Composable
@@ -50,7 +51,22 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalConte
             val points by remember {
                 mainPageViewModel.chartDataCollection
             }
-            LineChart(dataCollection = points)
+            LineChart(
+                dataCollection = points,
+                axisConfig = AxisConfig(
+                    showAxes = true,
+                    showGridLines = true,
+                    showGridLabel = true,
+                    axisColor = Color.Black,
+                    axisStroke = 0f,
+                    minLabelCount = 0
+                ),
+                lineConfig = LineConfig(
+                    hasDotMarker = false,
+                    strokeSize = 5f,
+                    hasSmoothCurve = false
+                )
+            )
         }
         Row {
             for (i in 0 until EqConstants.FILTERS_COUNT)
