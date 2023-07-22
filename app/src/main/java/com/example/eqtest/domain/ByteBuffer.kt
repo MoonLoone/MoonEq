@@ -19,9 +19,7 @@ object ByteBuffer {
 
     suspend fun bufferLoop(inputStream: InputStream, track: AudioTrack) {
         val music = ByteArray(EqConstants.BUFFER_SIZE)
-        while (withContext(Dispatchers.IO) {
-                inputStream.read(music)
-            } != -1) {
+        while (inputStream.read(music) != -1) {
             val musicInShortArray = ByteArrayToShortArray(music)
             equalizedMusic = Equalizer.equalization(musicInShortArray)
             track.write(
@@ -31,6 +29,4 @@ object ByteBuffer {
             )
         }
     }
-
-
 }

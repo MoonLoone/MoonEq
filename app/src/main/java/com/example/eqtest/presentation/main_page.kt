@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.example.eqtest.tools.EqConstants
@@ -32,7 +31,6 @@ import com.himanshoe.charty.common.config.AxisConfig
 import com.himanshoe.charty.line.LineChart
 import com.himanshoe.charty.line.config.LineConfig
 
-@Preview
 @Composable
 fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalContext.current.applicationContext)) {
     Column(

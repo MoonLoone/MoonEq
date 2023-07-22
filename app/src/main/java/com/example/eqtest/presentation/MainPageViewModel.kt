@@ -41,9 +41,13 @@ class MainPageViewModel(context: Context) : ViewModel() {
         Timer(true).schedule(timerTask {
             CoroutineScope(viewModelScope.coroutineContext).launch {
                 _chartDataCollection.value = ChartDataCollection(
-                    ByteBuffer.equalizedMusic.slice(IntRange(50, EqConstants.BUFFER_SIZE/4)).toList()
+                    ByteBuffer.equalizedMusic.slice(IntRange(50, EqConstants.BUFFER_SIZE / 4))
+                        .toList()
                         .mapIndexed { index, item ->
-                            LineData(xValue = index, yValue = item.toFloat())
+                            LineData(
+                                xValue = index,
+                                yValue = item.toFloat()
+                            )
                         })
             }
         }, 0, 100)
