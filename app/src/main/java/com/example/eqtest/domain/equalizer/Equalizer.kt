@@ -9,7 +9,7 @@ import kotlin.math.pow
 
 object Equalizer {
 
-    //private val chorus = Chorus()
+    private val chorus = Chorus()
     private val distortion = Distortion()
 
     var isChorus = false
@@ -30,6 +30,10 @@ object Equalizer {
             for (j in 0 until EqConstants.FILTERS_COUNT) {
                 outputSignal[i] = (outputSignal[i] + filterConvolution[j].await()[i]).toShort()
             }
+        }
+        if (isChorus){
+            chorus.inputStream = outputSignal
+            outputSignal = chorus.createEffectAsync().await()
         }
         if (isDistortion){
             distortion.inputStream = outputSignal

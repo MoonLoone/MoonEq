@@ -6,21 +6,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import java.nio.ShortBuffer
 
-class Delay : Effect() {
+class Delay(input: ShortArray) : Effect() {
 
-    private var buffer: ShortArray = ShortArray(BUFFER_SIZE/Short.SIZE_BYTES)
-
-    override var inputStream: ShortArray = ShortArray(EqConstants.BUFFER_SIZE)
+    override var inputStream: ShortArray = input.copyOfRange(0,BUFFER_SIZE)
 
     override suspend fun createEffectAsync() = CoroutineScope(Dispatchers.IO).async {
-        val savedSignal = buffer.clone()
-        buffer = inputStream
-        savedSignal
+        for (i in inputStream.indices){
+            inputStream[i] = (inputStream[i] * ATTENUATION).toInt().toShort()
+        }
+        inputStream
     }
 
     private companion object{
         const val ATTENUATION: Double = 0.7
-        const val BUFFER_SIZE: Int = 3
+        const val BUFFER_SIZE: Int = EqConstants.BUFFER_SIZE / 2
     }
 
 }

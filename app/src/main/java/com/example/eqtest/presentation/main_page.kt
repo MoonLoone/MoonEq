@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +35,12 @@ import com.himanshoe.charty.line.config.LineConfig
 
 @Composable
 fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalContext.current.applicationContext)) {
+    var checkDistortion by remember {
+        mutableStateOf(false)
+    }
+    var checkChorus by remember {
+        mutableStateOf(false)
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -80,8 +87,19 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalConte
         Button(onClick = { mainPageViewModel.stopMusic() }) {
             Text(text = "Stop")
         }
-        Button(onClick = { Equalizer.isDistortion = true }) {
-            Text(text = "Distortion")
+        Row() {
+            Checkbox(
+                checked = checkDistortion,
+                onCheckedChange = {
+                    checkDistortion = !checkDistortion
+                    Equalizer.isDistortion = checkDistortion
+                })
+            Checkbox(
+                checked = checkChorus,
+                onCheckedChange = {
+                    checkChorus = !checkChorus
+                    Equalizer.isChorus = checkChorus
+                })
         }
     }
 }
