@@ -1,12 +1,9 @@
 package com.example.eqtest.tools
 
-import android.content.ContentResolver
-import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
-import android.net.Uri
-import android.util.Log
+import androidx.core.app.NotificationCompat.StreamType
 import com.example.eqtest.domain.ByteBuffer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,13 +18,13 @@ fun createAudioTrack(): AudioTrack {
                 .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
                 .build()
         )
-        .setBufferSizeInBytes(EqConstants.BUFFER_SIZE)
         .setAudioAttributes(
             AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setUsage(AudioAttributes.USAGE_GAME)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build()
         )
+        .setBufferSizeInBytes(EqConstants.BUFFER_SIZE)
         .setTransferMode(AudioTrack.MODE_STREAM)
         .build()
 }

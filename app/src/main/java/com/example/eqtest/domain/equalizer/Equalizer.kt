@@ -5,6 +5,9 @@ import com.example.eqtest.domain.equalizer.coefs.FirCoefficients
 import com.example.eqtest.domain.equalizer.effects.Chorus
 import com.example.eqtest.domain.equalizer.effects.Distortion
 import com.example.eqtest.tools.EqConstants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlin.coroutines.coroutineContext
 import kotlin.math.pow
 
 object Equalizer {
@@ -24,10 +27,10 @@ object Equalizer {
     suspend fun equalization(input: ShortArray): ShortArray {
         var outputSignal = ShortArray(input.size)
         val filterConvolution = Array(filters.size) {
-            filters[it].convolutionAsync(input)
+            CoroutineScope(coroutineContext).async { filters[it].convolutionAsync(input) }
         }
-        for (i in outputSignal.indices) {
-            for (j in 0 until EqConstants.FILTERS_COUNT) {
+        for (i in input.indices) {
+            for (j in filters.indices) {
                 outputSignal[i] = (outputSignal[i] + filterConvolution[j].await()[i]).toShort()
             }
         }

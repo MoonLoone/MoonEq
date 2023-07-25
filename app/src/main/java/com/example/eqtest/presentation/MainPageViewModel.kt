@@ -1,18 +1,18 @@
 package com.example.eqtest.presentation
 
-import android.R.attr.path
-import android.content.Context
+import android.media.MediaRecorder.AudioSource
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.net.toFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eqtest.domain.ByteBuffer
 import com.example.eqtest.domain.Player
 import com.example.eqtest.domain.equalizer.Equalizer
 import com.example.eqtest.tools.EqConstants
+import com.example.eqtest.tools.createWavFileHeader
 import com.himanshoe.charty.common.ChartDataCollection
 import com.himanshoe.charty.line.model.LineData
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +24,7 @@ import java.util.Timer
 import kotlin.concurrent.timerTask
 
 
-class MainPageViewModel(context: Context) : ViewModel() {
+class MainPageViewModel() : ViewModel() {
 
     private var inputStream: InputStream? = null
 
@@ -42,10 +42,15 @@ class MainPageViewModel(context: Context) : ViewModel() {
                 inputStream!!,
             )
             player!!.play()
-            Timer(true).schedule(timerTask {
-                CoroutineScope(viewModelScope.coroutineContext).launch {
+            CoroutineScope(viewModelScope.coroutineContext).launch {
+                Timer(true).schedule(timerTask {
                     _chartDataCollection.value = ChartDataCollection(
-                        ByteBuffer.equalizedMusic.slice(IntRange(50, EqConstants.BUFFER_SIZE / 4))
+                        ByteBuffer.equalizedMusic.slice(
+                            IntRange(
+                                0,
+                                minOf(EqConstants.BUFFER_SIZE / 4, EqConstants.MAX_GRAPH)
+                            )
+                        )
                             .toList()
                             .mapIndexed { index, item ->
                                 LineData(
@@ -53,8 +58,8 @@ class MainPageViewModel(context: Context) : ViewModel() {
                                     yValue = item.toFloat()
                                 )
                             })
-                }
-            }, 0, 100)
+                }, 0, 100)
+            }
         }
     }
 
@@ -66,6 +71,7 @@ class MainPageViewModel(context: Context) : ViewModel() {
 
     fun createInputStream(musicUri: Uri) {
         val file = musicUri.path?.let { File(it) }
+        Log.d("!!!", createWavFileHeader(musicUri).toString())
         inputStream = FileInputStream(file)
     }
 

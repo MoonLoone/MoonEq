@@ -2,15 +2,18 @@ package com.example.eqtest.domain
 
 import android.media.AudioTrack
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.example.eqtest.domain.equalizer.Equalizer
 import com.example.eqtest.tools.ByteArrayToShortArray
 import com.example.eqtest.tools.EqConstants
 import com.example.eqtest.tools.ShortArrayToByteArray
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.InputStream
+import kotlin.coroutines.coroutineContext
 
 
 object ByteBuffer {

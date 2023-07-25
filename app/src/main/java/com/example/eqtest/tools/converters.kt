@@ -9,7 +9,8 @@ fun ByteArrayToShortArray(bufferBytes: ByteArray): ShortArray {
     val bufferShort = ShortArray(bufferBytes.size / 2)
     while (i < bufferBytes.size) {
         bufferShort[j] = (ByteBuffer.wrap(bufferBytes, i, 2)
-            .order(ByteOrder.LITTLE_ENDIAN).short / 2).toShort()
+            .order(ByteOrder.LITTLE_ENDIAN)
+            .short / 2).toShort()
         i += 2
         j++
     }
@@ -22,7 +23,7 @@ fun ShortArrayToByteArray(bufferShort: ShortArray): ByteArray {
     val bufferBytes = ByteArray(bufferShort.size * 2)
     while (i < bufferShort.size && j < bufferBytes.size) {
         bufferBytes[j] = bufferShort[i].toByte()
-        bufferBytes[j + 1] = (bufferShort[i].toInt() ushr 7).toByte()
+        bufferBytes[j + 1] = (bufferShort[i].toInt() ushr 8).toByte()
         i++
         j += 2
     }

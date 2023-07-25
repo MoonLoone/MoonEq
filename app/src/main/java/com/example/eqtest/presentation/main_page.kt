@@ -1,5 +1,7 @@
 package com.example.eqtest.presentation
 
+import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DrawerValue
@@ -19,6 +22,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +36,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import com.example.eqtest.data.Song
 import com.example.eqtest.domain.equalizer.Equalizer
 import com.example.eqtest.tools.EqConstants
 import com.himanshoe.charty.common.config.AxisConfig
@@ -39,29 +44,20 @@ import com.himanshoe.charty.line.LineChart
 import com.himanshoe.charty.line.config.LineConfig
 
 @Composable
-fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalContext.current.applicationContext)) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel()) {
     var checkDistortion by remember {
         mutableStateOf(false)
     }
     var checkChorus by remember {
         mutableStateOf(false)
     }
-    val drawerViewModel = DrawerViewModel()
-    ModalNavigationDrawer(drawerContent = {
-        drawerViewModel.getAllWavTrack(LocalContext.current)
-        LazyColumn() {
-            items(drawerViewModel.songsList.size) { index ->
-                Text(
-                    text = drawerViewModel.songsList[index].displayName,
-                    modifier = Modifier.clickable {
-                        mainPageViewModel.createInputStream(
-                            musicUri = drawerViewModel.songsList[index].uri,
-                        )
-                    })
-            }
+    Drawer(
+        setSong = {
+            mainPageViewModel.createInputStream(
+                musicUri = it,
+            )
         }
-    }, drawerState = drawerState) {
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -99,15 +95,10 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalConte
                 for (i in 0 until EqConstants.FILTERS_COUNT)
                     CustomSlider { gain: Double -> mainPageViewModel.setGain(gain, i) }
             }
-            Button(onClick = { mainPageViewModel.startMusic() }) {
-                Text(text = "Start")
-            }
-            Button(onClick = { mainPageViewModel.pauseMusic() }) {
-                Text(text = "Pause")
-            }
-            Button(onClick = { mainPageViewModel.stopMusic() }) {
-                Text(text = "Stop")
-            }
+            Buttons(
+                startMusic = { mainPageViewModel.startMusic() },
+                pauseMusic = { mainPageViewModel.pauseMusic() },
+                stopMusic = { mainPageViewModel.stopMusic() })
             Row() {
                 Checkbox(
                     checked = checkDistortion,
@@ -131,6 +122,7 @@ fun CustomSlider(setGain: (Double) -> Unit) {
     var sliderPosition by remember { mutableStateOf(1f) }
     Column {
         Slider(
+            steps = 10,
             modifier = Modifier
                 .graphicsLayer {
                     rotationZ = 270f
@@ -161,3 +153,47 @@ fun CustomSlider(setGain: (Double) -> Unit) {
         Text(text = sliderPosition.toString())
     }
 }
+
+@Composable
+fun Drawer(setSong: (musicUri: Uri) -> Unit, content: @Composable () -> Unit) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerViewModel = DrawerViewModel()
+    ModalNavigationDrawer(drawerContent = {
+        drawerViewModel.getAllWavTrack(LocalContext.current)
+        val songs = drawerViewModel.songsList.toList()
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            items(songs.size) { index ->
+                SongItem(song = songs[index], onClick = setSong)
+            }
+        }
+    }, drawerState = drawerState, content = content)
+}
+
+@Composable
+fun Buttons(startMusic: () -> Unit, pauseMusic: () -> Unit, stopMusic: () -> Unit) {
+    Row() {
+        Button(onClick = startMusic) {
+            Text(text = "Start")
+        }
+        Button(onClick = pauseMusic) {
+            Text(text = "Pause")
+        }
+        Button(onClick = stopMusic) {
+            Text(text = "Stop")
+        }
+    }
+}
+
+@Composable
+fun SongItem(song: Song, onClick: (musicUri: Uri) -> Unit) {
+    Column(
+        modifier = Modifier
+            .background(color = Color.Yellow, shape = RoundedCornerShape(8.dp))
+            .clickable { onClick(song.uri) },
+    ) {
+        Text(text = song.displayName)
+        Text(text = song.author)
+        Text(text = song.duration)
+    }
+}
+

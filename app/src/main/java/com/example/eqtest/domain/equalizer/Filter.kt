@@ -12,8 +12,7 @@ class Filter(
 
     var gain: Double = 1.0
 
-    fun convolutionAsync(input: ShortArray): Deferred<ShortArray> =
-        CoroutineScope(Dispatchers.IO).async {
+    fun convolutionAsync(input: ShortArray): ShortArray {
             var accumulator: Double = .0
             val output = ShortArray(input.size) { 0 }
             for (i in input.indices) {
@@ -21,8 +20,8 @@ class Filter(
                 for (j in 0..minOf(i, coefficients.size - 1)) {
                     accumulator += input[i - j] * coefficients[j]
                 }
-                output[i] = (0.125 * gain * accumulator).toInt().toShort()
+                output[i] = (gain * accumulator * 0.125).toInt().toShort()
             }
-            return@async output
+            return output
         }
 }
