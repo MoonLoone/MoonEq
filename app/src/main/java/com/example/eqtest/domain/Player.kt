@@ -2,27 +2,28 @@ package com.example.eqtest.domain
 
 import android.content.Context
 import android.media.AudioTrack
+import android.net.Uri
+import android.util.Log
 import com.example.eqtest.R
 import com.example.eqtest.tools.createAudioTrack
 import com.example.eqtest.tools.startLoop
-import kotlinx.coroutines.Job
+import java.io.InputStream
 
 
-class Player(context: Context) {
+class Player(private val inputStream: InputStream) {
 
     private val track: AudioTrack = createAudioTrack()
-    private val inputStreamFromRawFile = context.resources.openRawResource(R.raw.sound)
 
     fun play() {
+        startLoop(inputStream, track)
         track.play()
-        startLoop(inputStreamFromRawFile, track)
     }
 
-    fun stop(){
+    fun stop() {
         track.stop()
     }
 
-    fun pause(){
+    fun pause() {
         track.pause()
     }
 

@@ -1,5 +1,6 @@
 package com.example.eqtest.presentation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,10 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,71 +40,88 @@ import com.himanshoe.charty.line.config.LineConfig
 
 @Composable
 fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel(LocalContext.current.applicationContext)) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var checkDistortion by remember {
         mutableStateOf(false)
     }
     var checkChorus by remember {
         mutableStateOf(false)
     }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 32.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .height(300.dp)
-                .fillMaxWidth()
-        ) {
-            val points by remember {
-                mainPageViewModel.chartDataCollection
+    val drawerViewModel = DrawerViewModel()
+    ModalNavigationDrawer(drawerContent = {
+        drawerViewModel.getAllWavTrack(LocalContext.current)
+        LazyColumn() {
+            items(drawerViewModel.songsList.size) { index ->
+                Text(
+                    text = drawerViewModel.songsList[index].displayName,
+                    modifier = Modifier.clickable {
+                        mainPageViewModel.createInputStream(
+                            musicUri = drawerViewModel.songsList[index].uri,
+                        )
+                    })
             }
-            LineChart(
-                dataCollection = points,
-                axisConfig = AxisConfig(
-                    showAxes = true,
-                    showGridLines = true,
-                    showGridLabel = true,
-                    axisColor = Color.Black,
-                    axisStroke = 0f,
-                    minLabelCount = 0
-                ),
-                lineConfig = LineConfig(
-                    hasDotMarker = false,
-                    strokeSize = 5f,
-                    hasSmoothCurve = false
+        }
+    }, drawerState = drawerState) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 32.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .height(300.dp)
+                    .fillMaxWidth()
+            ) {
+                val points by remember {
+                    mainPageViewModel.chartDataCollection
+                }
+                LineChart(
+                    dataCollection = points,
+                    axisConfig = AxisConfig(
+                        showAxes = true,
+                        showGridLines = true,
+                        showGridLabel = true,
+                        axisColor = Color.Black,
+                        axisStroke = 0f,
+                        minLabelCount = 0
+                    ),
+                    lineConfig = LineConfig(
+                        hasDotMarker = false,
+                        strokeSize = 5f,
+                        hasSmoothCurve = false
+                    )
                 )
-            )
-        }
-        Row {
-            for (i in 0 until EqConstants.FILTERS_COUNT)
-                CustomSlider { gain: Double -> mainPageViewModel.setGain(gain, i) }
-        }
-        Button(onClick = { mainPageViewModel.startMusic() }) {
-            Text(text = "Start")
-        }
-        Button(onClick = { mainPageViewModel.pauseMusic() }) {
-            Text(text = "Pause")
-        }
-        Button(onClick = { mainPageViewModel.stopMusic() }) {
-            Text(text = "Stop")
-        }
-        Row() {
-            Checkbox(
-                checked = checkDistortion,
-                onCheckedChange = {
-                    checkDistortion = !checkDistortion
-                    Equalizer.isDistortion = checkDistortion
-                })
-            Checkbox(
-                checked = checkChorus,
-                onCheckedChange = {
-                    checkChorus = !checkChorus
-                    Equalizer.isChorus = checkChorus
-                })
+            }
+            Row {
+                for (i in 0 until EqConstants.FILTERS_COUNT)
+                    CustomSlider { gain: Double -> mainPageViewModel.setGain(gain, i) }
+            }
+            Button(onClick = { mainPageViewModel.startMusic() }) {
+                Text(text = "Start")
+            }
+            Button(onClick = { mainPageViewModel.pauseMusic() }) {
+                Text(text = "Pause")
+            }
+            Button(onClick = { mainPageViewModel.stopMusic() }) {
+                Text(text = "Stop")
+            }
+            Row() {
+                Checkbox(
+                    checked = checkDistortion,
+                    onCheckedChange = {
+                        checkDistortion = !checkDistortion
+                        Equalizer.isDistortion = checkDistortion
+                    })
+                Checkbox(
+                    checked = checkChorus,
+                    onCheckedChange = {
+                        checkChorus = !checkChorus
+                        Equalizer.isChorus = checkChorus
+                    })
+            }
         }
     }
 }

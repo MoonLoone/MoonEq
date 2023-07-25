@@ -1,8 +1,11 @@
 package com.example.eqtest.tools
 
+import android.content.ContentResolver
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
+import android.net.Uri
 import android.util.Log
 import com.example.eqtest.domain.ByteBuffer
 import kotlinx.coroutines.CoroutineScope
@@ -34,9 +37,6 @@ fun startLoop(inputStreamFromRawFile: InputStream, track: AudioTrack) {
         ByteBuffer.bufferLoop(inputStreamFromRawFile, track)
     }
 }
-
-
-
 
 fun stopLoop(){
 
