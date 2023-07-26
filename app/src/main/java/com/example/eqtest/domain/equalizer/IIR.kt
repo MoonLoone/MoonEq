@@ -6,7 +6,7 @@ class IIR(val numinatorCoefficients: Array<Double>, val denominatorCoefficients:
     override var gain: Double = 1.0
 
     override fun convolution(input: ShortArray): ShortArray {
-        var accumulator: Double = .0
+        var accumulator: Double
         val output = ShortArray(input.size) { 0 }
         for (i in input.indices) {
             accumulator = .0

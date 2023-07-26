@@ -3,9 +3,9 @@ package com.example.eqtest.domain
 import android.media.AudioTrack
 import android.util.Log
 import com.example.eqtest.domain.equalizer.Equalizer
-import com.example.eqtest.tools.ByteArrayToShortArray
+import com.example.eqtest.tools.byteArrayToShortArray
 import com.example.eqtest.tools.EqConstants
-import com.example.eqtest.tools.ShortArrayToByteArray
+import com.example.eqtest.tools.shortArrayToByteArray
 import java.io.InputStream
 
 
@@ -24,10 +24,10 @@ object ByteBuffer {
                     inputStream.close()
                     break
                 }
-                val musicInShortArray = ByteArrayToShortArray(music)
+                val musicInShortArray = byteArrayToShortArray(music)
                 equalizedMusic = Equalizer.equalization(musicInShortArray)
                 track.write(
-                    ShortArrayToByteArray(equalizedMusic),
+                    shortArrayToByteArray(equalizedMusic),
                     0,
                     music.size
                 )

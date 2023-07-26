@@ -3,7 +3,7 @@ package com.example.eqtest.tools
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-fun ByteArrayToShortArray(bufferBytes: ByteArray): ShortArray {
+fun byteArrayToShortArray(bufferBytes: ByteArray): ShortArray {
     var i = 0
     var j = 0
     val bufferShort = ShortArray(bufferBytes.size / 2)
@@ -17,7 +17,7 @@ fun ByteArrayToShortArray(bufferBytes: ByteArray): ShortArray {
     return bufferShort
 }
 
-fun ShortArrayToByteArray(bufferShort: ShortArray): ByteArray {
+fun shortArrayToByteArray(bufferShort: ShortArray): ByteArray {
     var i = 0
     var j = 0
     val bufferBytes = ByteArray(bufferShort.size * 2)

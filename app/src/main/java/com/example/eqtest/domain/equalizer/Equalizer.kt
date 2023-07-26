@@ -17,7 +17,7 @@ object Equalizer {
 
     var isChorus = false
     var isDistortion = false
-    var isFIR = false
+    private var isFIR = false
 
     private val FIRFilters = List(EqConstants.FILTERS_COUNT) {
         FIR(
@@ -60,6 +60,7 @@ object Equalizer {
     }
 
     fun changeFilterType() {
+        isFIR = !isFIR
         filters = if (isFIR) FIRFilters else IIRFilters
     }
 

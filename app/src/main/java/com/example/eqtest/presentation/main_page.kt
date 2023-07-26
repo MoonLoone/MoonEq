@@ -1,9 +1,6 @@
 package com.example.eqtest.presentation
 
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +22,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,9 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Constraints
@@ -49,7 +43,6 @@ import com.himanshoe.charty.common.config.AxisConfig
 import com.himanshoe.charty.line.LineChart
 import com.himanshoe.charty.line.config.LineConfig
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 @Composable
 fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel()) {
@@ -128,6 +121,9 @@ fun MainPage(mainPageViewModel: MainPageViewModel = MainPageViewModel()) {
                                 Equalizer.isChorus = checkChorus
                             })
                     }
+                }
+                Button(onClick = { mainPageViewModel.changeFilterType() }) {
+                    Text(text = "Change filter type")
                 }
             }
         }

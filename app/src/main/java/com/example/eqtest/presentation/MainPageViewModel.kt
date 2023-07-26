@@ -1,6 +1,5 @@
 package com.example.eqtest.presentation
 
-import android.media.MediaRecorder.AudioSource
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
@@ -24,7 +23,7 @@ import java.util.Timer
 import kotlin.concurrent.timerTask
 
 
-class MainPageViewModel() : ViewModel() {
+class MainPageViewModel : ViewModel() {
 
     private var inputStream: InputStream? = null
 
@@ -73,6 +72,10 @@ class MainPageViewModel() : ViewModel() {
         val file = musicUri.path?.let { File(it) }
         Log.d("!!!", createWavFileHeader(musicUri).toString())
         inputStream = FileInputStream(file)
+    }
+
+    fun changeFilterType(){
+        Equalizer.changeFilterType()
     }
 
 }

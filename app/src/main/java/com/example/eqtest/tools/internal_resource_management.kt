@@ -3,14 +3,11 @@ package com.example.eqtest.tools
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
-import android.util.Log
-import androidx.core.app.NotificationCompat.StreamType
 import com.example.eqtest.domain.ByteBuffer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.InputStream
-import java.lang.Exception
 
 fun createAudioTrack(): AudioTrack {
     return AudioTrack.Builder()
