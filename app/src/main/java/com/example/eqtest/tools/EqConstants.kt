@@ -2,7 +2,7 @@ package com.example.eqtest.tools
 
 object EqConstants {
 
-    const val BUFFER_SIZE = 500000
+    const val BUFFER_SIZE = 80000
     const val FILTERS_COUNT = 6
     const val MAX_GRAPH = 3000
 
