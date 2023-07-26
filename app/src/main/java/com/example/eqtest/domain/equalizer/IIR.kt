@@ -16,7 +16,7 @@ class IIR(val numinatorCoefficients: Array<Double>, val denominatorCoefficients:
                     accumulator -= input[i - j] * denominatorCoefficients[j]
                 }
             }
-            output[i] = (gain * accumulator * 0.125).toInt().toShort()
+            output[i] = (gain * accumulator * 0.25).toInt().toShort()
         }
         return output
     }
