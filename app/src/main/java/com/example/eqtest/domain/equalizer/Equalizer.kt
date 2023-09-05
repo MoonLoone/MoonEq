@@ -8,7 +8,6 @@ import com.example.eqtest.tools.EqConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlin.coroutines.coroutineContext
-import kotlin.math.pow
 
 object Equalizer {
 
@@ -41,7 +40,7 @@ object Equalizer {
         }
         for (i in input.indices) {
             for (j in filters.indices) {
-                outputSignal[i] = (outputSignal[i] + filterConvolution[j].await()[i]).toShort()
+                outputSignal[i] = (outputSignal[i] + filterConvolution[j].await()[i] * 5).toShort()
             }
         }
         if (isChorus) {
@@ -56,7 +55,7 @@ object Equalizer {
     }
 
     fun setFilterGain(gain: Double, index: Int) {
-        filters[index].gain = if (gain == 0.0) gain else 10.0.pow(gain / 10)
+        filters[index].gain = gain
     }
 
     fun changeFilterType() {

@@ -157,7 +157,7 @@ fun CustomSlider(setGain: (Double) -> Unit) {
                 .width(120.dp)
                 .height(50.dp),
             value = sliderPosition,
-            valueRange = 0f..5f,
+            valueRange = 0f..1f,
             onValueChange = {
                 sliderPosition = it
                 setGain(sliderPosition.toDouble())
